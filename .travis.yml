@@ -1,0 +1,29 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - BRANCH=`echo ${TRAVIS_BRANCH} | sed 's/[^a-zA-Z0-9._-]/\_/' | awk '{print tolower($0)}'`
+
+before_install:
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+
+script:
+  - docker build . -t $DOCKER_IMAGE:$TRAVIS_COMMIT
+
+deploy:
+  - name: "Deploy latest version"
+    provider: script
+    script: docker tag $DOCKER_IMAGE:$TRAVIS_COMMIT $DOCKER_IMAGE:latest && docker push $DOCKER_IMAGE:latest
+    on:
+      all_branches: true
+      fork: false
+
+  - name: "Deploy tag version"
+    provider: script
+    script: docker tag $DOCKER_IMAGE:$TRAVIS_COMMIT $DOCKER_IMAGE:$BRANCH && docker push $DOCKER_IMAGE:$BRANCH
+    on:
+      tags: true
+      fork: false
