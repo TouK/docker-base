@@ -1,11 +1,10 @@
-FROM ubuntu:bionic
+FROM openjdk:8
 
 LABEL maintainer="TouK"
 
 USER root
 
 # Set environments
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 ENV NOTVISIBLE "in users profile"
 
 # Install base tools
@@ -13,8 +12,7 @@ RUN apt-get update && \
     apt-get install -y apt-utils \
     net-tools netcat dnsutils telnet \
     wget curl unzip \
-    openjdk-8-jre-headless \
-    docker.io openssh-server
+    openssh-server
 
 # Install wait-for-it
 RUN wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
