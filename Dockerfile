@@ -1,4 +1,8 @@
-FROM openjdk:8
+# Touk base jdk image
+
+# Pull base image
+ARG BASE_IMAGE_TAG
+FROM openjdk:${BASE_IMAGE_TAG:-8u242-jdk-stretch}
 
 LABEL maintainer="TouK"
 
@@ -28,3 +32,4 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 EXPOSE 22
+WORKDIR /root
